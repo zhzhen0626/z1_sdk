@@ -39,6 +39,11 @@ linear_vel = 0.3
 for i in range(0, 1000):
     arm.cartesianCtrlCmd([0,0,0,0,0,-1,-1], angular_vel, linear_vel)
     time.sleep(arm._ctrlComp.dt)
+    joint_pos = arm.lowstate.getQ() # get 6 joint angle
+    Tdes =arm._ctrlComp.armModel.forwardKinematics(joint_pos, 6) # get the homogeneous 矩阵
+    posture = unitree_arm_interface.homoToPosture(Tdes)
+    gripper_pos = arm.lowstate.getGripperQ() # get gripper position
+    print(posture)
 
 arm.backToStart()
 arm.loopOff()
